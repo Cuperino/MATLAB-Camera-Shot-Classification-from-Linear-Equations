@@ -568,9 +568,9 @@ A1 = [ A(:,4)-A(:,2), A(:,5)-A(:,3), A(:,8)-A(:,6), A(:,9)-A(:,7) ];
 C = A(:,10);
 
 % TEST
+test1 = [ test(:,4)-test(:,2), test(:,5)-test(:,3), test(:,8)-test(:,6), test(:,9)-test(:,7) ];
 % test1 = [ test(:,3)-test(:,1), test(:,4)-test(:,2), test(:,7)-test(:,5), test(:,8)-test(:,6) ];
 % test1 = [ test(:,1), test(:,4)-test(:,2), test(:,5)-test(:,3), test(:,8)-test(:,6), test(:,9)-test(:,7) ];
-test1 = [ test(:,4)-test(:,2), test(:,5)-test(:,3), test(:,8)-test(:,6), test(:,9)-test(:,7) ];
 
 % PROCESS
 % Solve linear equation system
@@ -580,10 +580,19 @@ x = A1\C  % A*x = C, despejar para x
 toc()
 
 % TEST X
-D2 = test1 * x
+D2 = test1 * x;
 % Prueba
 D1 = test(:,10);
+
+D = horzcat(D1, round(D2), (round(D2)./D1).-1)
+
 % ERROR MEASSUREMENTS
-absoluteError = D1.-D2
-relativeError = (abs(absoluteError)./D1).*100
-mean(relativeError')
+absoluteError = D1.-D2;
+relativeError = (abs(absoluteError)./D1);
+disp('Average Absolute Error')
+mean(absoluteError )
+disp('Average Relative Error')
+mean(relativeError)
+
+disp('Accuracy')
+100-mean(relativeError.*100)
