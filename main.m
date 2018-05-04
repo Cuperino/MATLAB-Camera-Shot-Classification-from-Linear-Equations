@@ -1,6 +1,7 @@
 % Training
 A = [
-256,157,63,171,77,121,51,198,167,1;
+% Height, faceXi, faceYi, faceXf, faceYf, bodyXi, bodyYi, bodyXf, bodyYf, LabelID
+     256,    157,     63,    171,     77,    121,     51,    198,    167,      1;
 256,74,59,91,84,51,50,107,193,2;
 256,323,46,359,98,277,23,419,256,4;
 256,179,37,231,120,104,21,258,256,5;
@@ -558,19 +559,22 @@ test = [
 % 224,202,48,253,109,151,12,341,224,5;
 ];
 
-% TRAIN
-% Preprocess dataset A into A1
-A1 = [ A(:,4)-A(:,2), A(:,5)-A(:,3), A(:,8)-A(:,6), A(:,9)-A(:,7) ];
-%A1 = [ A(:,3)-A(:,1), A(:,4)-A(:,2), A(:,7)-A(:,5), A(:,8)-A(:,6) ];
-%A1 = [ A(:,1), A(:,4)-A(:,2), A(:,5)-A(:,3), A(:,8)-A(:,6), A(:,9)-A(:,7) ];
+% Evaluate Linear Independance
+disp('Linearly Independent Vectors')
+R = rank(A)
+disp('Available Vectors')
+[rows, ~] = size(A)
 
-% Separate results as C
+% TRAIN
+% Preprocess dataset A into A1 (A sub 1)
+%A1 =[A(faceXf)-A(faceXi), A(bodyYf)-A(bodyYi), A(bodyXf)-A(bodyXi), A(bodyYf)-A(bodyYi) ];
+A1 = [  A(:,4) - A(:,2),     A(:,5) - A(:,3),     A(:,8) - A(:,6),      A(:,9)-A(:,7) ];
+
+% Separate results as C(lasifications)
 C = A(:,10);
 
 % TEST
 test1 = [ test(:,4)-test(:,2), test(:,5)-test(:,3), test(:,8)-test(:,6), test(:,9)-test(:,7) ];
-% test1 = [ test(:,3)-test(:,1), test(:,4)-test(:,2), test(:,7)-test(:,5), test(:,8)-test(:,6) ];
-% test1 = [ test(:,1), test(:,4)-test(:,2), test(:,5)-test(:,3), test(:,8)-test(:,6), test(:,9)-test(:,7) ];
 
 % PROCESS
 % Solve linear equation system
@@ -579,12 +583,14 @@ tic();
 x = A1\C  % A*x = C, despejar para x
 toc()
 
-% TEST X
-D2 = test1 * x;
-% Prueba
+% TEST CLASSIFIER
+% Expected classes
 D1 = test(:,10);
+% Predicted classes
+D2 = test1 * x;
 
-D = horzcat(D1, round(D2), (round(D2)./D1).-1)
+% Display results
+D = horzcat(D1, round(D2), D2)
 
 % ERROR MEASSUREMENTS
 absoluteError = D1.-D2;
