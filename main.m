@@ -559,21 +559,22 @@ test = [
 % 224,202,48,253,109,151,12,341,224,5;
 ];
 
-% Evaluate Linear Independance
-disp('Linearly Independent Vectors')
-R = rank(A)
-disp('Available Vectors')
-[rows, ~] = size(A)
-
-% TRAIN
 % Preprocess dataset A into A1 (A sub 1)
-%A1 =[A(faceXf)-A(faceXi), A(bodyYf)-A(bodyYi), A(bodyXf)-A(bodyXi), A(bodyYf)-A(bodyYi) ];
-A1 = [  A(:,4) - A(:,2),     A(:,5) - A(:,3),     A(:,8) - A(:,6),      A(:,9)-A(:,7) ];
+%A1 = [A(faceXf)-A(faceXi), A(bodyYf)-A(bodyYi), A(bodyXf)-A(bodyXi), A(bodyYf)-A(bodyYi) ];
+A1 = [   A(:,4) - A(:,2),     A(:,5) - A(:,3),     A(:,8) - A(:,6),      A(:,9)-A(:,7) ];
 
 % Separate results as C(lasifications)
 C = A(:,10);
 
+% Evaluate Linear Independance
+disp('Linearly Independent Vectors')
+R = rank(A1)
+disp('Available Vectors')
+[rows, ~] = size(A1)
+
+% TRAIN
 % TEST
+%test1 = [A(faceXf)-A(faceXi), A(bodyYf)-A(bodyYi), A(bodyXf)-A(bodyXi), A(bodyYf)-A(bodyYi) ];
 test1 = [ test(:,4)-test(:,2), test(:,5)-test(:,3), test(:,8)-test(:,6), test(:,9)-test(:,7) ];
 
 % PROCESS
